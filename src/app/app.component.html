@@ -2,5 +2,6 @@
   <h1>Add a new Vehicle</h1>
   <app-vehicle-input (newDataEvent)="appendData($event)"/>
   <h2>My vehicles list</h2>
+  <h2>My vehicles list2</h2>
   <app-vehicle-display *ngFor="let vehicle of vehicles" [vehicle]="vehicle"></app-vehicle-display>
 </div>
