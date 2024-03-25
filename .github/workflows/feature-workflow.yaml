@@ -9,7 +9,7 @@ on:
       - feature/*
 
 jobs:
-  build:
+  feature-test:
 
     runs-on: ubuntu-latest
 
