@@ -9,6 +9,7 @@ import { Vehicle } from './vehicle';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit{
+
   title = 'vehicles-fe';
 
 
@@ -26,5 +27,9 @@ export class AppComponent implements OnInit{
         this.vehicles = data}
     )
   }
+
+  appendData(newVehicle: any): void {
+    this.vehicles.push(newVehicle);
+    }
   
 }
