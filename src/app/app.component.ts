@@ -28,7 +28,7 @@ export class AppComponent implements OnInit{
     )
   }
 
-  appendData(newVehicle: any): void {
+  appendData(newVehicle: Vehicle): void {
     this.vehicles.push(newVehicle);
     }
   
