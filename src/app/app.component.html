@@ -1,5 +1,5 @@
 <div class="main">
   <h1>Add a new Vehicle</h1>
-  <!-- <app-vehicle-input (newDataEvent)="appendData($event)"/> -->
+   <app-vehicle-input (newDataEvent)="appendData($event)"/> 
   <app-vehicle-display *ngFor="let vehicle of vehicles" [vehicle]="vehicle"></app-vehicle-display>
 </div>
