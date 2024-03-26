@@ -25,11 +25,11 @@ jobs:
         credentials_json: '${{ secrets.SERVICE_ACCOUNT_KEY }}'
 
     #configure the gcp acces for github actions workflow
-    - uses: google-github-actions/setup-gcloud@v2
-      with:
-        service_account_key: ${{ secrets.SERVICE_ACCOUNT_KEY }}
-        project_id: ${{ env.PROJECT_ID }}
-        export_default_credentials: true
+    # - uses: google-github-actions/setup-gcloud@v2
+    #   with:
+    #     service_account_key: ${{ secrets.SERVICE_ACCOUNT_KEY }}
+    #     project_id: ${{ env.PROJECT_ID }}
+    #     export_default_credentials: true
     
     #Build docker image
     - name: Build Docker image
