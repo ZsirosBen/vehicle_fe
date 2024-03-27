@@ -24,18 +24,7 @@ jobs:
       with:
         credentials_json: '${{ secrets.SERVICE_ACCOUNT_KEY }}'
 
-    #configure the gcp acces for github actions workflow
-    # - uses: google-github-actions/setup-gcloud@v2
-    #   with:
-    #     service_account_key: ${{ secrets.SERVICE_ACCOUNT_KEY }}
-    #     project_id: ${{ env.PROJECT_ID }}
-    #     export_default_credentials: true
-    
-    #Build docker image
-    - name: Build Docker image
-      run: docker build -t $IMAGE_NAME:latest .
-
-    # Automatic Tagging of Release
+        # Automatic Tagging of Release
     - name: Minor version for each merge
       id: taggerDryRun
       uses: anothrNick/github-tag-action@1.36.0
@@ -43,23 +32,27 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.SERVICE_ACCOUNT_KEY }}
         WITH_V: true
         DRY_RUN: true
+    
+    #Build docker image
+    - name: Build Docker image
+      run: docker build -t $IMAGE_NAME:latest .
 
-    - name: echo new tag
-      run: |
-        echo "The next tag version will be: ${{ steps.taggerDryRun.outputs.new_tag }}"
-    - name: echo tag
-      run: |
-        echo "The current tag is: ${{ steps.taggerDryRun.outputs.tag }}"
-    - name: echo part
-      run: |
-        echo "The version increment was: ${{ steps.taggerDryRun.outputs.part }}"
+
 
     #Configure Docker client
     - name:  Configure Docker client
       run: gcloud auth configure-docker us-west2-docker.pkg.dev --quiet
 
     # gcloud auth configure-docker --quiet
-    
+
+    #TAGGER FINAL
+    - name: Minor version for each merge
+      id: taggerFinal
+      uses: anothrNick/github-tag-action@1.36.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        WITH_V: true
+
     - name: Push Docker Image to Artifact Registry
       env:
         GIT_TAG: ${{ steps.increment-git-tag.outputs.git-tag }}
