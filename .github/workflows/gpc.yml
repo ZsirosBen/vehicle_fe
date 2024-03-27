@@ -16,8 +16,8 @@ jobs:
       PROJECT_ID: vehicle-test-418415 # EZ A PROJECT ID A GCP-n
     steps:
     #checkout the repository
-    # - name: Checkout
-    #   uses: actions/checkout@v3
+    - name: Checkout
+      uses: actions/checkout@v3
     
     - name: 'Google Cloud Auth'
       uses: google-github-actions/auth@v1
