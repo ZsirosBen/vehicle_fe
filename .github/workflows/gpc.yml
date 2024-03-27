@@ -1,0 +1,49 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: Build and Push Angular image to Google Cloud Platform
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-push-gcr:
+    name: Build and Push to GCP
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_NAME: vehicle-fe
+      PROJECT_ID: vehicle-test-418415 # EZ A PROJECT ID A GCP-n
+    steps:
+    #checkout the repository
+    - name: Checkout
+      uses: actions/checkout@v3
+    
+    - name: 'Google Cloud Auth'
+      uses: google-github-actions/auth@v1
+      with:
+        credentials_json: '${{ secrets.SERVICE_ACCOUNT_KEY }}'
+    
+    #Build docker image
+    - name: Build Docker image
+      run: docker build -t $IMAGE_NAME:latest .
+
+    # Automatic Tagging of Release
+    - name: Automatic Tagging of Release
+      id: increment-git-tag
+      run: bash ./scripts/git_update.sh -v patch
+    
+    #Configure Docker client
+    - name:  Configure Docker client
+      run: gcloud auth configure-docker us-west2-docker.pkg.dev --quiet
+
+    # gcloud auth configure-docker --quiet
+    
+    - name: Push Docker Image to Artifact Registry
+      env:
+        GIT_TAG: ${{ steps.increment-git-tag.outputs.NEW_TAG }}
+      run: |-
+        docker tag $IMAGE_NAME:latest us-west2-docker.pkg.dev/$PROJECT_ID/images/$IMAGE_NAME:latest
+        docker tag $IMAGE_NAME:latest us-west2-docker.pkg.dev/$PROJECT_ID/images/$IMAGE_NAME:$GIT_TAG
+        docker push us-west2-docker.pkg.dev/$PROJECT_ID/images/$IMAGE_NAME:latest
+        docker push us-west2-docker.pkg.dev/$PROJECT_ID/images/$IMAGE_NAME:$GIT_TAG
