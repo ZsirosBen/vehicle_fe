@@ -34,6 +34,11 @@ jobs:
     #Build docker image
     - name: Build Docker image
       run: docker build -t $IMAGE_NAME:latest .
+
+    # Automatic Tagging of Release
+    - name: Automatic Tagging of Release
+      id: increment-git-tag
+      run: bash ./scripts/git_update.sh -v patch
     
     #Configure Docker client
     - name:  Configure Docker client
@@ -52,7 +57,7 @@ jobs:
     
     - name: Push Docker Image to Artifact Registry
       env:
-        GIT_TAG: v0.1.0
+        GIT_TAG: ${{ steps.increment-git-tag.outputs.git-tag }}
       run: |-
         docker tag $IMAGE_NAME:latest us-west2-docker.pkg.dev/$PROJECT_ID/images/$IMAGE_NAME:latest
         docker tag $IMAGE_NAME:latest us-west2-docker.pkg.dev/$PROJECT_ID/images/$IMAGE_NAME:$GIT_TAG
